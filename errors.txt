@@ -1,0 +1,16 @@
+internal-error = Erro interno! ($(error-orig))
+config-error = Erro de configuração! ($(error-orig))
+not-logged-in = Você não está registrado! (IP: $(ip))
+ippool-empty = Erro ao atribuir IP!
+shutting-down = Servidor fora do ar!
+user-session-limit = usuário $(username) já se encontra logado !
+license-session-limit = Limite de sessão atingido! ($(error-orig))
+wrong-mac-username = Endereço MAC não confere!
+chap-missing = Ative o JavaScript do navegador e tente novamente!
+invalid-username = Usuário ou senha invalida!
+invalid-mac = $(username) Não é possível autenticar deste endereço MAC!
+uptime-limit = Limite de diario atingido!
+traffic-limit = Limite de tráfego atingido!
+radius-timeout = Servidor não está respondendo!
+auth-in-progress = Autorização em progresso, Tente novamente mais tarde!
+radius-reply = $(error-orig)

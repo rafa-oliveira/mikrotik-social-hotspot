@@ -1,0 +1,225 @@
+<!doctype html>
+<html xmlns:fb="http://www.facebook.com/2008/fbml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wifi Social</title>
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+	<meta charset="utf-8">
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="assets/js/jquery.min.js"></script>
+<meta property="fb:app_id" content="116275835692448" />
+	<style type="text/css">
+	.auto-style1 {
+	position: relative;
+	min-height: 1px;
+	float: left;
+	width: 100%;
+	text-align: center;
+	padding-left: 15px;
+	padding-right: 15px;
+	background-color: #FFFFFF;
+	}
+	body {
+	background-color: #284866;
+	background-image: url();
+	color: #CCC;
+	font-size: 12px;
+}
+    .container br {
+	font-size: 10px;
+}
+    </style>
+		$(if chap-id)
+		<form name="sendin" action="$(link-login-only)" method="post">
+		<input type="hidden" name="username" />
+		<input type="hidden" name="password" />
+		<input type="hidden" name="dst" value="$(link-orig)" />
+		<input type="hidden" name="popup" value="true" />
+	</form>
+	<script type="text/javascript" src="md5.js"></script>
+	<script type="text/javascript">
+	<!--
+	    function doLogin() {
+		document.sendin.username.value = document.login.username.value;
+		document.sendin.password.value = hexMD5('$(chap-id)' + document.login.password.value + '$(chap-challenge)');
+		document.sendin.submit();
+		return false;
+	    }
+	//-->
+	</script>
+	$(endif)
+</head>
+<body>
+    <div class="container">
+      <div class="border col-md-offset-3 col-md-6">
+          <h2 style="text-align: center;"><img src="img/logo2.png" width="302" height="290" longdesc="#"><br>
+            </h2>
+            <div id="fb-root"></div>
+            
+<script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1510649502456191',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v8.0'
+      });
+        
+      FB.AppEvents.logPageView();   
+        
+    };
+  
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "https://connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+  </script>
+             <div id="wifiLoginBlock" style="display: block;">
+                <div class="blockDialog">
+                    <div class="m-t-b-20" style="text-align: center; color: #CCC;">
+                        <h4 class="bs-callout row">Check-in obrigatório</h4>
+                        <p id="errorMsg" style="display: none;"></p>
+                        <div id="btnLoginFb" style="display: block;">
+                          <p><b>para obter acesso internet gratuita.</b></p>							   									
+                            <p>
+                              <!-- dns name do hotspot -->			
+                              <!-- email,user_birthday,user_location,public_profile,publish_actions // email,public_profile,publish_actions -->
+                              <a class="btn btn-primary" href="https://www.facebook.com/dialog/oauth?client_id=116275835692448&redirect_uri=http://benjaminwifi.com.br&response_type=token&scope=email,user_birthday,user_location,public_profile,publish_actions"> 
+                                Login Facebook
+                              </a></p>
+                            <p>&nbsp;</p>
+                        </div>
+                        <div id="accessInternet" style="display: none;">
+                            <p>Clique no botão abaixo para acessar a internet</p>
+                            <button onclick="fbConnect()" type="button" class="btn btn-success">Acessar Internet</button>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="check_in" id="checkIn">Marque para fazer Check-in
+                                </label>
+				<p class="text-danger text-center">$(if error) $(error) $(endif)</p>
+                            </div>
+																		<!-- adicionar pagina do facebook da empresa -->
+                            <div class="fb-page" data-width="300" data-href="https://www.facebook.com/digitalboxsolucoes" data-hide-cover="false" data-show-facepile="true" data-show-posts="false"></div>
+                            <br />
+                            <div style="margin-top: 20px;">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+      </div>
+      <br>
+    </div>
+<script>
+        function getTokenFromUrl() {
+            var hash;
+            var hashes = window.location.href.slice(window.location.href.indexOf('?#') + 1).split('&');
+            for(var i = 0; i < hashes.length; i++)
+            {
+                hash = hashes[i].split('=');
+                paramsUrl.push(hash[0]);
+                paramsUrl[hash[0]] = hash[1];
+            }
+            return paramsUrl;
+        }
+
+        function checkLoginFBManually () {
+            getTokenFromUrl();
+            access_token = paramsUrl['#access_token'];
+            if(access_token !== undefined) {
+                manually = true;
+                var url = "https://graph.facebook.com/v2.3/me?access_token="+access_token+"&fields=id,name,email&format=json&method=get&pretty=0&suppress_http_code=1"
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    success: function( response ) {
+                        if(response.id) {
+                            statusGetInfoManually = true;
+                            document.getElementById('infoFbAccount').innerHTML =
+                                    'Olá <b>'+ response.name + '</b>!';
+                            document.getElementById("accessInternet").style.display='block';
+                            document.getElementById("btnLoginFb").style.display='none';
+                        } else {
+                            document.getElementById('infoFbAccount').innerHTML =
+                                    '<b style="color: #ff0000;">' +response.error.message + '</b>';
+                        }
+                    },
+                    error: function(x, t, m) {
+                        if(x.status !== 200) {
+                            document.getElementById('infoFbAccount').innerHTML =
+                                    'Ocorreu um erro durante a conexão FB.';
+                        }
+                    }
+                });
+            } else {
+                document.getElementById("accessInternet").style.display='none';
+                document.getElementById("btnLoginFb").style.display='block';
+            }
+        }
+        function fbConnect() {
+            var place = '1861226090866634'; // ID FACCE BOOK
+            if(manually == true && statusGetInfoManually == true) {
+                var url = "https://graph.facebook.com/v2.3/me/feed?app_id=116275835692448&access_token="+access_token //ADD IND FACEBOOK
+                var wall = {
+                    message : "Bem Vindo",
+                    name: ' WifiSocial',
+                    caption: 'Hotspot WifiSocial',
+                    description : 'Venha se juntar WiFi sistema de publicidade para compartilhar a oportunidade de promover sua marca no WifiSocial',
+                    link: 'https://facebook.com/digitalboxsolucoes',
+                    picture: 'https://scontent-gru2-1.xx.fbcdn.net/v/t1.0-1/p200x200/19554771_1866298560359387_5673332425365175245_n.jpg?oh=ae5b93226032a0980c6f36aa630bcda0&oe=5A43F909',
+                };
+                if(document.getElementById("checkIn").checked == true) {
+                    wall.place = place;
+                }
+                $.ajax({
+                    url: url,
+                    method: "POST",
+                    data: wall,
+                    success: function( response ) {
+                        if(response.id) {
+                            window.location.href = "http://benjaminwifi.com.br";
+                        } else {
+                            document.getElementById('infoFbAccount').innerHTML =
+                                    '<b style="color: #ff0000;">' +response.error.message + '</b>';
+                        }
+                    },
+                    error: function(x, t, m) {
+                        console.log(x);
+                        if(x.status !== 200) {
+                            document.getElementById('infoFbAccount').innerHTML =
+                                    'Ocorreu um erro durante a conexão FB.';
+                        }
+                    }
+                });
+            } else {
+                var wall = {
+                    "enable":"1",
+                    "msg": "Hotspot Social",
+                    "name": 'WifiSocial',
+                    "link": 'https://www.facebook.com/pg/liderinfoguape/',
+                    "caption": 'Wifi Social',
+                    "desc": 'Venha se juntar WiFi sistema de publicidade para compartilhar a oportunidade de promover sua marca na sua rede WiFi.',
+                    "pic": 'https://scontent-gru2-1.xx.fbcdn.net/v/t1.0-1/p200x200/19554771_1866298560359387_5673332425365175245_n.jpg?oh=ae5b93226032a0980c6f36aa630bcda0&oe=5A43F909',
+                }
+                if(document.getElementById("checkIn").checked == true) {
+                    wall.place = place;
+                }
+                FB.api('/me/feed', 'post', wall,function(response) {
+                    if (response && !response.error) {
+                        window.location.href = "$(link-login-only)?dst=https://www.facebook.com/pg/liderinfoguape/&username=T-$(mac-esc)"; // link pagina $(link-login-only)?dst=http://www.seusite.com.br&username=T-$(mac-esc)
+                    } else {
+                        window.location.href = "$(link-login-only)?dst=https://www.facebook.com/pg/liderinfoguape/&username=T-$(mac-esc)";
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+<center>©Digitalbox 2017 Todos os direitos reservados</center>
+</html>

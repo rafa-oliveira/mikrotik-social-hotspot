@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Status Social</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style media="screen">
+      #fb-btn{margin-top:20px;}
+      #profile, #logout, #feed{display:none}
+    </style>
+		<style type="text/css">
+	img{border-radius: 20px;}
+	</style>
+  </head>
+  <body>
+
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '116275835692448', // APP ID
+          cookie     : true,
+          xfbml      : true,
+          version    : 'v2.8'
+        });
+
+        FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+
+       function statusChangeCallback(response){
+         if(response.status === 'connected'){
+           console.log('Logged in and authenticated');
+           setElements(true);
+           testAPI();
+         } else {
+           console.log('Not authenticated');
+           setElements(false);
+         }
+       }
+
+      function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+          statusChangeCallback(response);
+        });
+      }
+
+      function testAPI(){
+        FB.api('/me?fields=name,email,birthday,gender,picture,location', function(response){
+          if(response && !response.error){
+            //console.log(response);
+            buildProfile(response);
+          }
+
+          FB.api('/me/feed', function(response){
+            if(response && !response.error){
+              buildFeed(response);
+            }
+          });
+        })
+      }
+// getting basic user info
+		function getInfo() {
+			FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(120).height(120)'}, function(response) {
+				document.getElementById('status').innerHTML = "<img src='" + response.picture.data.url + "'>";
+			});
+		}
+      function buildProfile(user){
+        let profile = `
+          <center><h3>${user.name}</h3>
+		 <button onclick="getInfo()">Foto Perfil</button>
+		<div id="status"></center>
+          <ul class="list-group">
+			<li class="list-group-item">Seu ip: $(ip)</li>
+            <li class="list-group-item">Face ID: ${user.id}</li>
+            <li class="list-group-item">Email: ${user.email}</li>
+            <li class="list-group-item">Aniversário: ${user.birthday}</li>
+            <li class="list-group-item">Cidade: ${user.location.name}</li>
+			<li class="list-group-item">Download: $(bytes-out-nice)</li>
+			<li class="list-group-item">Upload: $(bytes-in-nice)</li>
+			<li class="list-group-item">Conectado: $(uptime)</li>
+			<li class="list-group-item">Restante: $(session-time-left)</li>	
+          </ul>
+        `;
+
+        document.getElementById('profile').innerHTML = profile;
+      }
+
+      function buildFeed(feed){
+        let output = '<h3>Latest Posts</h3>';
+        for(let i in feed.data){
+          if(feed.data[i].message){
+            output += `
+              <div class="well">
+                ${feed.data[i].message} <span>${feed.data[i].created_time}</span>
+              </div>
+            `;
+          }
+        }
+
+        document.getElementById('feed').innerHTML = output;
+      }
+
+      function setElements(isLoggedIn){
+        if(isLoggedIn){
+          document.getElementById('logout').style.display = 'block';
+          document.getElementById('profile').style.display = 'block';
+          document.getElementById('fb-btn').style.display = 'none';
+          document.getElementById('heading').style.display = 'none';
+        } else {
+          document.getElementById('logout').style.display = 'none';
+          document.getElementById('profile').style.display = 'none';
+          document.getElementById('feed').style.display = 'none';
+          document.getElementById('fb-btn').style.display = 'block';
+          document.getElementById('heading').style.display = 'block';
+        }
+      }
+
+      function logout(){
+        FB.logout(function(response){
+          setElements(false);
+        });
+      }
+    </script>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a id="logout" href="#" onclick="logout()"></a></li>
+            <fb:login-button
+              id="fb-btn"
+              scope="public_profile,email,user_birthday"
+              onlogin="checkLoginState();">
+            </fb:login-button>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+    <div class="container">
+      <center><h3 id="heading">USUÁRIO</h3></center>
+      <div id="profile"></div>
+      <div id="feed"></div>
+    </div>
+  </body>
+  <center>
+	<form action="$(link-logout)" name="logout" onSubmit="return openLogout()">
+    <input class="btn btn-warning" role="button"style="width: 150px"  type="submit" value="Deconectar">
+	</form>
+	</center>
+</html>
