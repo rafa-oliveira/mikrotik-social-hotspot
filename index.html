@@ -30,6 +30,9 @@
          }(document, 'script', 'facebook-jssdk'));
       </script>
       <script>
+            FB.getLoginStatus(response => {
+                statusChangeCallback(response);
+            });
           function statusChangeCallback(response) {
                 console.log('statusChangeCallback');
                 console.log(response);
