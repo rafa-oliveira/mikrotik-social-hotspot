@@ -30,10 +30,16 @@
          }(document, 'script', 'facebook-jssdk'));
       </script>
       <script>
-            FB.getLoginStatus(response => {
-                statusChangeCallback(response);
-            });
-          function statusChangeCallback(response) {
+
+            let th = setInterval(() => {     
+                if (!FB) return
+                window.clearInterval(th) 
+                FB.getLoginStatus(response => {
+                    statusChangeCallback(response);
+                });
+            }, 10);
+
+            function statusChangeCallback(response) {
                 console.log('statusChangeCallback');
                 console.log(response);
                 // The response object is returned with a status field that lets the
